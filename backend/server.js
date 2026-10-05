@@ -1,0 +1,18 @@
+require("dotenv").config();
+
+const express = require("express");
+const cors = require("cors");
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(cors()); // lets the React site talk to this server
+app.use(express.json()); // lets the server read JSON sent by the frontend
+
+app.get("/health", (req, res) => {
+  res.json({ ok: true });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
