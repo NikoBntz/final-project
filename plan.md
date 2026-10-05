@@ -8,14 +8,14 @@
 
 ## Phase 0: Decisions and setup (Oct 4 to 5)
 
-- [ ] Decide content with mom: 8 to 10 products (name, category, description, photo)
+- [x] Decide content with mom: 8 to 10 products (name, category, description, photo)
 - [x] Choose logo, 2 to 3 brand colors, 1 or 2 fonts
 - [x] Write "about" text and contact data (WhatsApp, Instagram, city)
 - [x] Sketch Home and Catalog (paper or Canva)
 - [x] Create GitHub repo with `frontend/` and `backend/`
 - [x] Add `.gitignore` (`node_modules`, `.env`, `dist`) and a first `README.md`
 - [x] Vite + React in `frontend/`, set `base` for GitHub Pages
-- [ ] Use `HashRouter` and create pages: Home, Catalog, Contact, Admin
+- [x] Use `HashRouter` and create pages: Home, Catalog, Contact, Admin
 - [ ] **Deploy to GitHub Pages and check the live URL**
 
 ## Phase 1: Frontend base (Oct 6 to 8)
