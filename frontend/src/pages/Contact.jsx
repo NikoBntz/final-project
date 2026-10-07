@@ -39,9 +39,6 @@ const Contact = () => {
           <p>Address: 123 Business Rd, City, Country</p>
         </section>
       </main>
-      <footer>
-        <p>&copy; 2023 Your Website. All rights reserved.</p>
-      </footer>
     </div>
   );
 };
