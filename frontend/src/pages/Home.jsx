@@ -13,9 +13,6 @@ const Home = () => {
           <button className="cta-button">Get Started</button>
         </section>
       </main>
-      <footer>
-        <p>&copy; 2023 Your Website. All rights reserved.</p>
-      </footer>
     </div>
   );
 };
