@@ -10,7 +10,6 @@ const Home = () => {
         <section className="hero">
           <h2>Discover Amazing Content</h2>
           <p>Explore our platform to find valuable resources and tools.</p>
-          <button className="cta-button">Get Started</button>
         </section>
       </main>
     </div>
