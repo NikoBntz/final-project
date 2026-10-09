@@ -1,41 +1,33 @@
-import { HashRouter, Routes, Route, Link } from "react-router-dom";
-import Home from "../pages/Home.jsx";
-import About from "../pages/About.jsx";
-import Contact from "../pages/Contact.jsx";
-import Admin from "../pages/Admin.jsx";
-import Catalog from "../pages/Catalog.jsx";
+import { NavLink } from "react-router-dom";
 
 function Header() {
   return (
-    <>
-      <HashRouter>
-        <nav id="header">
-          <p className="header">
-            <Link to="/home">Home</Link>
-          </p>
-          <p className="header">
-            <Link to="/about">About</Link>
-          </p>
-          <p className="header">
-            <Link to="/contact">Contact</Link>
-          </p>
-          <p className="header">
-            <Link to="/admin">Admin</Link>
-          </p>
-          <p className="header">
-            <Link to="/catalog">Catalog</Link>
-          </p>
-        </nav>
+    <header className="site-header">
+      <div className="header-inner">
+        <div className="brand-logo">
+          <NavLink to="/home" className="logo-text">Levinor</NavLink>
+          <span className="logo-tagline">Muebles a medida</span>
+        </div>
 
-        <Routes>
-          <Route path="/home" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/catalog" element={<Catalog />} />
-        </Routes>
-      </HashRouter>
-    </>
+        <nav className="nav-menu" aria-label="Navegación principal">
+          <NavLink to="/home" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+            Inicio
+          </NavLink>
+          <NavLink to="/about" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+            Nosotros
+          </NavLink>
+          <NavLink to="/catalog" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+            Catálogo
+          </NavLink>
+          <NavLink to="/contact" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+            Contacto
+          </NavLink>
+          <NavLink to="/admin" className={({ isActive }) => `nav-link admin-nav-btn ${isActive ? "active" : ""}`}>
+            Admin
+          </NavLink>
+        </nav>
+      </div>
+    </header>
   );
 }
 
