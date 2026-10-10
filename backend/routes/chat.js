@@ -4,6 +4,7 @@ import Product from "../model/Product.js";
 const router = Router();
 const MAX_INPUT_LENGTH = 500;
 const MAX_HISTORY = 8;
+const MISTRAL_TIMEOUT_MS = 15000;
 
 function normalizeText(value) {
   return String(value ?? "")
@@ -37,6 +38,8 @@ router.post("/", async (req, res) => {
       .status(400)
       .json({ message: "Escribe tu pregunta para el asistente." });
   }
+
+  let providerTimeout;
 
   try {
     const products = await Product.find().sort({ createdAt: -1 }).lean();
@@ -74,20 +77,28 @@ Contacto base: WhatsApp o Instagram del taller, según la información del sitio
       });
     }
 
+    const controller = new AbortController();
+    providerTimeout = setTimeout(
+      () => controller.abort(),
+      MISTRAL_TIMEOUT_MS,
+    );
+
     const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
+      signal: controller.signal,
       body: JSON.stringify({
         model: "mistral-small-latest",
         temperature: 0.4,
         messages,
       }),
     });
-
     const data = await response.json().catch(() => ({}));
+    clearTimeout(providerTimeout);
+    providerTimeout = undefined;
 
     if (!response.ok) {
       console.error("Mistral API error:", response.status, data);
@@ -105,19 +116,34 @@ Contacto base: WhatsApp o Instagram del taller, según la información del sitio
         });
       }
 
-      const message =
-        data?.error?.message || "No pude responder en este momento.";
-      return res.status(502).json({ message });
+      return res
+        .status(502)
+        .json({ message: "No pude responder en este momento." });
     }
 
-    const reply =
-      data?.choices?.[0]?.message?.content ||
-      "Puedo ayudarte con piezas a medida de Levinor. Puedes contactarnos para desarrollar tu proyecto.";
+    const reply = data?.choices?.[0]?.message?.content;
+
+    if (typeof reply !== "string" || !reply.trim()) {
+      console.error("Mistral API returned no assistant content");
+      return res
+        .status(502)
+        .json({ message: "No pude responder en este momento." });
+    }
 
     return res.json({
-      reply: String(reply).trim(),
+      reply: reply.trim(),
     });
   } catch (error) {
+    if (providerTimeout) {
+      clearTimeout(providerTimeout);
+    }
+
+    if (error.name === "AbortError") {
+      return res.status(504).json({
+        message: "El asistente tardó demasiado. Intenta nuevamente.",
+      });
+    }
+
     console.error("Chat assistant error:", error);
     return res
       .status(500)
