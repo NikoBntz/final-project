@@ -1,10 +1,18 @@
 import { Router } from "express";
+import rateLimit from "express-rate-limit";
 import Message from "../model/Message.js";
 
 const router = Router();
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { message: "Demasiados mensajes. Intenta de nuevo más tarde." },
+});
 
-router.post("/", async (req, res) => {
+router.post("/", contactLimiter, async (req, res) => {
   const { name, email, phone = "", message } = req.body || {};
 
   if (!name || !email || !message) {

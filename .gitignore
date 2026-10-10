@@ -1,3 +1,7 @@
-#Environments
+# Dependencies and build output
+node_modules/
+dist/
+
+# Environments
 .env
 backend/.env

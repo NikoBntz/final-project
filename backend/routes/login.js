@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import rateLimit from "express-rate-limit";
 import jwt from "jsonwebtoken";
 import { Router } from "express";
 import Admin from "../model/Admin.js";
@@ -6,9 +7,22 @@ import Product from "../model/Product.js";
 import Message from "../model/Message.js";
 
 const router = Router();
-const JWT_SECRET = process.env.JWT_SECRET || "levinor-dev-secret";
+const JWT_SECRET =
+  process.env.JWT_SECRET ||
+  (process.env.NODE_ENV === "production" ? null : "levinor-dev-secret");
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { message: "Demasiados intentos. Intenta de nuevo más tarde." },
+});
 
 function authenticateToken(req, res, next) {
+  if (!JWT_SECRET) {
+    return res.status(503).json({ message: "La autenticación no está configurada." });
+  }
+
   const authHeader = req.headers.authorization || "";
   const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
 
@@ -25,11 +39,15 @@ function authenticateToken(req, res, next) {
   }
 }
 
-router.post("/login", async (req, res) => {
+router.post("/login", loginLimiter, async (req, res) => {
   const { username, password } = req.body || {};
 
   if (!username || !password) {
     return res.status(400).json({ message: "Usuario y contraseña son obligatorios." });
+  }
+
+  if (!JWT_SECRET) {
+    return res.status(503).json({ message: "La autenticación no está configurada." });
   }
 
   try {

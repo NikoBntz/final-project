@@ -1,10 +1,18 @@
 import { Router } from "express";
+import rateLimit from "express-rate-limit";
 import Product from "../model/Product.js";
 
 const router = Router();
 const MAX_INPUT_LENGTH = 500;
 const MAX_HISTORY = 8;
 const MISTRAL_TIMEOUT_MS = 15000;
+const chatLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { message: "Demasiadas consultas. Intenta de nuevo más tarde." },
+});
 
 function normalizeText(value) {
   return String(value ?? "")
@@ -27,7 +35,7 @@ function buildCatalogPrompt(products) {
     .join("\n");
 }
 
-router.post("/", async (req, res) => {
+router.post("/", chatLimiter, async (req, res) => {
   const rawMessage = normalizeText(req.body?.message || "");
   const incomingHistory = Array.isArray(req.body?.history)
     ? req.body.history
