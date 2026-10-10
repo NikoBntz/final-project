@@ -1,14 +1,42 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ProductCard from "../components/ProductCard";
-import { categories, products } from "../data/products";
+import { getProducts } from "../services/api";
 
 function Catalog() {
+  const [products, setProducts] = useState([]);
   const [activeCategory, setActiveCategory] = useState('Todos');
+  const [status, setStatus] = useState('loading');
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let isCurrent = true;
+
+    getProducts()
+      .then((data) => {
+        if (!isCurrent) return;
+        setProducts(data);
+        setStatus('success');
+      })
+      .catch((requestError) => {
+        if (!isCurrent) return;
+        setError(requestError.message);
+        setStatus('error');
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, []);
+
+  const categories = useMemo(
+    () => ['Todos', ...new Set(products.map((product) => product.category))],
+    [products],
+  );
 
   const visibleProducts = useMemo(() => {
     if (activeCategory === 'Todos') return products;
     return products.filter((product) => product.category === activeCategory);
-  }, [activeCategory]);
+  }, [activeCategory, products]);
 
   return (
     <div className="page-shell catalog-page">
@@ -17,29 +45,54 @@ function Catalog() {
         <h1>Muebles y soluciones para cada ambiente</h1>
       </section>
 
-      <div className="catalog-toolbar">
-        {categories.map((category) => (
-          <button
-            key={category}
-            type="button"
-            className={`filter-button ${activeCategory === category ? 'active' : ''}`}
-            onClick={() => setActiveCategory(category)}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
-      {visibleProducts.length > 0 ? (
-        <div className="product-grid">
-          {visibleProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+      {status === 'success' && products.length > 0 && (
+        <div className="catalog-toolbar">
+          {categories.map((category) => (
+            <button
+              key={category}
+              type="button"
+              className={`filter-button ${activeCategory === category ? 'active' : ''}`}
+              onClick={() => setActiveCategory(category)}
+            >
+              {category}
+            </button>
           ))}
         </div>
-      ) : (
+      )}
+
+      {status === 'loading' && (
         <div className="empty-state">
-          <h3>No hay productos en esta categoría aún.</h3>
-          <p>Prueba con otra opción para seguir explorando el catálogo.</p>
+          <h3>Cargando catálogo...</h3>
+          <p>Estamos trayendo los muebles disponibles.</p>
+        </div>
+      )}
+
+      {status === 'error' && (
+        <div className="empty-state">
+          <h3>No pudimos cargar el catálogo.</h3>
+          <p>{error} Verifica que el backend esté encendido e inténtalo de nuevo.</p>
+        </div>
+      )}
+
+      {status === 'success' && visibleProducts.length > 0 ? (
+        <div className="product-grid">
+          {visibleProducts.map((product) => (
+            <ProductCard key={product._id || product.id} product={product} />
+          ))}
+        </div>
+      ) : status === 'success' && (
+        <div className="empty-state">
+          {products.length === 0 ? (
+            <>
+              <h3>El catálogo está vacío por ahora.</h3>
+              <p>Vuelve pronto para conocer nuestras piezas disponibles.</p>
+            </>
+          ) : (
+            <>
+              <h3>No hay productos en esta categoría aún.</h3>
+              <p>Prueba con otra opción para seguir explorando el catálogo.</p>
+            </>
+          )}
         </div>
       )}
     </div>
