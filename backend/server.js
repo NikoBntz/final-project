@@ -9,7 +9,7 @@ import adminRouter from "./routes/login.js";
 import chatRouter from "./routes/chat.js";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3030;
 
 app.use(
   cors({

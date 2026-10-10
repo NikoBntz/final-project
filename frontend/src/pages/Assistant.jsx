@@ -83,6 +83,7 @@ function Assistant() {
             onChange={(event) => setInput(event.target.value)}
             placeholder="¿Necesitas una pieza para un espacio concreto?"
             aria-label="Mensaje para el asistente de Levinor"
+            disabled={isLoading}
           />
 
           <div className="assistant-actions">
@@ -91,7 +92,11 @@ function Assistant() {
             </button>
           </div>
 
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
+          {errorMessage && (
+            <p className="error-message" role="alert">
+              {errorMessage}
+            </p>
+          )}
         </form>
       </div>
     </div>

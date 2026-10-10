@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3030";
 const TOKEN_KEY = "levinor_admin_token";
@@ -27,7 +27,7 @@ function Admin() {
   const [productMessage, setProductMessage] = useState("");
   const [productError, setProductError] = useState("");
 
-  const loadDashboard = async () => {
+  const loadDashboard = useCallback(async () => {
     if (!token) return;
 
     setLoading(true);
@@ -52,16 +52,17 @@ function Admin() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     if (!token) {
-      setLoginForm(initialForm);
       return;
     }
 
+    // Dashboard fetch synchronizes authenticated state with the API.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadDashboard();
-  }, [token]);
+  }, [loadDashboard, token]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;

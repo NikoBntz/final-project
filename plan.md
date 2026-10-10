@@ -9,7 +9,7 @@
 - Admin auth with JWT and protected dashboard
 
 ## Current focus
-- AI assistant integration
+- AI assistant integration and local verification on port 3030
 - Deployment and production environment setup
 - Final polish, README, and defense preparation
 
@@ -28,7 +28,8 @@
 6. Log out and confirm session clears.
 
 ## Next milestones
-- Add AI conversation flow using the product catalog and brand rules
+- Verify AI conversation flow using the product catalog and brand rules
+- Confirm provider errors, including HTTP 429, show clear retry feedback
 - Deploy frontend and backend to production
 - Verify live API communication and final behavior
 - Prepare final defense checklist and demo
