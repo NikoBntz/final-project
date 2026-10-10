@@ -2,8 +2,11 @@ import "dotenv/config";
 import cors from "cors";
 import express from "express";
 import mongoose from "mongoose";
-import healthcheckerRouter from "./routes/healthchecker.js";
+import healthcheckerRouter from "./routes/health.js";
 import productsRouter from "./routes/products.js";
+import contactRouter from "./routes/contact.js";
+import adminRouter from "./routes/login.js";
+import chatRouter from "./routes/chat.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,8 +22,11 @@ app.get("/", (_req, res) => {
   res.json({ message: "Levinor API is running" });
 });
 
-app.use("/healthcheck", healthcheckerRouter);
+app.use("/health", healthcheckerRouter);
 app.use("/api/products", productsRouter);
+app.use("/api/contact", contactRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/chat", chatRouter);
 
 async function startServer() {
   try {
