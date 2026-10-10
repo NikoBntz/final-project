@@ -7,6 +7,7 @@ import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
 import Admin from "./pages/Admin.jsx";
 import Catalog from "./pages/Catalog.jsx";
+import Assistant from "./pages/Assistant.jsx";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/assistant" element={<Assistant />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/catalog" element={<Catalog />} />
           </Routes>

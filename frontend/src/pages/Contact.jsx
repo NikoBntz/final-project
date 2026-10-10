@@ -1,47 +1,70 @@
 import { useState } from "react";
+import { submitContactMessage } from "../services/api";
 
 const initialState = {
   name: "",
   email: "",
   phone: "",
-  message: ""
+  message: "",
 };
 
 const contactDetails = [
-  { label: 'Instagram', value: '@levinorca' },
-  { label: 'Facebook', value: 'Levinor Store' },
-  { label: 'WhatsApp', value: '+593 96 276 3508' },
-  { label: 'Ubicación', value: 'Guayaquil, Ecuador' }
+  { label: "Instagram", value: "@levinorca" },
+  { label: "Facebook", value: "Levinor Store" },
+  { label: "WhatsApp", value: "+593 96 276 3508" },
+  { label: "Ubicación", value: "Guayaquil, Ecuador" },
 ];
 
 function Contact() {
   const [form, setForm] = useState(initialState);
   const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState("idle");
+  const [serverMessage, setServerMessage] = useState("");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setForm((current) => ({ ...current, [name]: value }));
     setErrors((current) => ({ ...current, [name]: "" }));
+    if (status !== "idle") {
+      setStatus("idle");
+      setServerMessage("");
+    }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const nextErrors = {};
-    if (form.name.trim().length < 2) nextErrors.name = 'Escribe tu nombre.';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) nextErrors.email = 'Ingresa un correo válido.';
-    if (form.message.trim().length < 12) nextErrors.message = 'Cuéntanos un poco más sobre tu proyecto.';
+    if (form.name.trim().length < 2) nextErrors.name = "Escribe tu nombre.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) nextErrors.email = "Ingresa un correo válido.";
+    if (form.message.trim().length < 12) nextErrors.message = "Cuéntanos un poco más sobre tu proyecto.";
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
-      setSubmitted(false);
+      setStatus("error");
+      setServerMessage("Revisa los campos marcados e intenta otra vez.");
       return;
     }
 
-    setErrors({});
-    setSubmitted(true);
-    setForm(initialState);
+    try {
+      setErrors({});
+      setStatus("loading");
+      setServerMessage("");
+
+      await submitContactMessage({
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        message: form.message,
+      });
+
+      setStatus("success");
+      setServerMessage("Gracias. Tu información ha sido enviada correctamente.");
+      setForm(initialState);
+    } catch (error) {
+      setStatus("error");
+      setServerMessage(error.message || "No se pudo enviar el mensaje.");
+    }
   };
 
   return (
@@ -84,9 +107,14 @@ function Contact() {
             </label>
           </div>
 
-          <button type="submit" className="btn btn-primary">Enviar mensaje</button>
-          {submitted && (
-            <p className="success-message">Gracias. Tu información ha sido enviada correctamente.</p>
+          <button type="submit" className="btn btn-primary" disabled={status === "loading"}>
+            {status === "loading" ? "Enviando..." : "Enviar mensaje"}
+          </button>
+
+          {serverMessage && (
+            <p aria-live="polite" className={status === "success" ? "success-message" : "error-message"}>
+              {serverMessage}
+            </p>
           )}
         </form>
 

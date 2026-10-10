@@ -22,8 +22,8 @@ function Header() {
           <NavLink to="/contact" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
             Contacto
           </NavLink>
-          <NavLink to="/admin" className={({ isActive }) => `nav-link admin-nav-btn ${isActive ? "active" : ""}`}>
-            Admin
+          <NavLink to="/assistant" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+            Asistente
           </NavLink>
         </nav>
       </div>
