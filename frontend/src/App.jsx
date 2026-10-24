@@ -14,7 +14,14 @@ function App() {
     <HashRouter>
       <div className="app-shell">
         <Header />
-        <main className="main-content">
+        <button
+          type="button"
+          className="skip-link"
+          onClick={() => document.getElementById("main-content")?.focus()}
+        >
+          Saltar al contenido
+        </button>
+        <main id="main-content" className="main-content" tabIndex="-1">
           <Routes>
             <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<Home />} />

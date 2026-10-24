@@ -1,7 +1,9 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3030";
+export const API_URL = import.meta.env.DEV
+  ? ""
+  : import.meta.env.VITE_API_URL || "http://localhost:3030";
 
-export async function getProducts() {
-  const response = await fetch(`${API_URL}/api/products`);
+export async function getProducts(options = {}) {
+  const response = await fetch(`${API_URL}/api/products`, options);
 
   if (!response.ok) {
     throw new Error("No se pudo cargar el catálogo.");

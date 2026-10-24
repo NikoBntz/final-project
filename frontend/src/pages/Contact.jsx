@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { submitContactMessage } from "../services/api";
 
 const initialState = {
@@ -16,7 +17,11 @@ const contactDetails = [
 ];
 
 function Contact() {
-  const [form, setForm] = useState(initialState);
+  const { state } = useLocation();
+  const [form, setForm] = useState(() => ({
+    ...initialState,
+    message: state?.productName ? `Me interesa: ${state.productName}. ` : "",
+  }));
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle");
   const [serverMessage, setServerMessage] = useState("");
@@ -78,32 +83,32 @@ function Contact() {
         <form className="contact-form" onSubmit={handleSubmit}>
           <div className="form-row">
             <label>
-              <span>Nombre</span>
-              <input type="text" name="name" value={form.name} onChange={handleChange} />
-              {errors.name && <small>{errors.name}</small>}
+              <span id="name-label">Nombre</span>
+              <input id="name" type="text" name="name" value={form.name} onChange={handleChange} required autoComplete="name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "name-error" : undefined} />
+              {errors.name && <small id="name-error" role="alert">{errors.name}</small>}
             </label>
           </div>
 
           <div className="form-row">
             <label>
-              <span>Correo</span>
-              <input type="email" name="email" value={form.email} onChange={handleChange} />
-              {errors.email && <small>{errors.email}</small>}
+              <span id="email-label">Correo</span>
+              <input id="email" type="email" name="email" value={form.email} onChange={handleChange} required autoComplete="email" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "email-error" : undefined} />
+              {errors.email && <small id="email-error" role="alert">{errors.email}</small>}
             </label>
           </div>
 
           <div className="form-row">
             <label>
-              <span>Teléfono</span>
-              <input type="tel" name="phone" value={form.phone} onChange={handleChange} />
+              <span id="phone-label">Teléfono</span>
+              <input id="phone" type="tel" name="phone" value={form.phone} onChange={handleChange} autoComplete="tel" />
             </label>
           </div>
 
           <div className="form-row">
             <label>
-              <span>Proyecto</span>
-              <textarea name="message" rows="5" value={form.message} onChange={handleChange} />
-              {errors.message && <small>{errors.message}</small>}
+              <span id="message-label">Proyecto</span>
+              <textarea id="message" name="message" rows="5" value={form.message} onChange={handleChange} required aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? "message-error" : undefined} />
+              {errors.message && <small id="message-error" role="alert">{errors.message}</small>}
             </label>
           </div>
 

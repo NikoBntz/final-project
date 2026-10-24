@@ -1,60 +1,86 @@
 import "dotenv/config";
-import cors from "cors";
-import express from "express";
 import mongoose from "mongoose";
-import healthcheckerRouter from "./routes/health.js";
-import productsRouter from "./routes/products.js";
-import contactRouter from "./routes/contact.js";
-import adminRouter from "./routes/login.js";
-import chatRouter from "./routes/chat.js";
+import { createApp } from "./app.js";
 
-const app = express();
-const PORT = process.env.PORT || 3030;
-const allowedOrigins = (
-  process.env.FRONTEND_URL ||
-  "http://localhost:5173,https://nikobntz.github.io"
-)
-  .split(",")
-  .map((origin) => origin.trim())
-  .filter(Boolean);
+const PORT = Number(process.env.PORT || 3030);
+const HOST = process.env.HOST || "0.0.0.0";
+const DB_RETRY_DELAY_MS = 10000;
+const DB_SELECTION_TIMEOUT_MS = 10000;
+let isShuttingDown = false;
+let databaseWorkerRunning = false;
+const app = createApp();
 
-app.set("trust proxy", 1);
+function wait(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
 
-app.use(
-  cors({
-    origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
+async function superviseDatabase() {
+  if (databaseWorkerRunning) return;
 
-      return callback(new Error("Origin not allowed by CORS"));
-    },
-  }),
-);
-app.use(express.json());
+  databaseWorkerRunning = true;
 
-app.get("/", (_req, res) => {
-  res.json({ message: "Levinor API is running" });
-});
-
-app.use("/health", healthcheckerRouter);
-app.use("/api/products", productsRouter);
-app.use("/api/contact", contactRouter);
-app.use("/api/admin", adminRouter);
-app.use("/api/chat", chatRouter);
-
-async function startServer() {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log("Connected to MongoDB");
+    while (!isShuttingDown && mongoose.connection.readyState !== 1) {
+      try {
+        if (!process.env.MONGO_URI) {
+          throw new Error("MONGO_URI is not configured.");
+        }
 
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error("MongoDB connection error:", error);
-    process.exit(1);
+        await mongoose.connect(process.env.MONGO_URI, {
+          serverSelectionTimeoutMS: DB_SELECTION_TIMEOUT_MS,
+        });
+        console.log("Connected to MongoDB");
+      } catch (error) {
+        console.error(
+          `MongoDB connection failed: ${error.message.split("\n")[0]}`,
+        );
+        console.error(
+          "Check MONGO_URI and MongoDB Atlas Network Access settings.",
+        );
+        await wait(DB_RETRY_DELAY_MS);
+      }
+    }
+  } finally {
+    databaseWorkerRunning = false;
   }
 }
 
-startServer();
+function monitorDatabase() {
+  if (!isShuttingDown) {
+    superviseDatabase().catch((error) => {
+      console.error("Database connection worker stopped:", error);
+    });
+  }
+}
+
+mongoose.connection.on("disconnected", monitorDatabase);
+
+const server = app.listen(PORT, HOST, () => {
+  console.log(`Server running on ${HOST}:${PORT}`);
+  monitorDatabase();
+});
+
+async function shutdown(signal) {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+  console.log(`Received ${signal}. Shutting down...`);
+
+  const forceShutdown = setTimeout(() => {
+    process.exit(1);
+  }, 20000);
+  forceShutdown.unref();
+
+  server.close(async () => {
+    try {
+      await mongoose.disconnect();
+      clearTimeout(forceShutdown);
+      process.exit(0);
+    } catch (error) {
+      console.error("Error during shutdown:", error);
+      process.exit(1);
+    }
+  });
+}
+
+process.once("SIGINT", () => shutdown("SIGINT"));
+process.once("SIGTERM", () => shutdown("SIGTERM"));
