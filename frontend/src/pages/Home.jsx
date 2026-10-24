@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
-import { products } from "../data/products";
-
-const featuredSolutions = products.slice(0, 3);
+import { WHATSAPP_CATALOG_URL } from "../constants/links";
+import { useProducts } from "../hooks/useProducts";
 
 const capabilities = [
   { number: "01", title: "Cocinas a medida", text: "Flujos de trabajo pensados alrededor de tus hábitos, con materiales honestos y almacenamiento que sí funciona." },
@@ -16,6 +15,9 @@ const metrics = [
 ];
 
 function Home() {
+  const { products, status: catalogStatus } = useProducts();
+  const featuredSolutions = products.slice(0, 3);
+
   return (
     <div className="page-shell home-page">
       <section className="hero-section">
@@ -24,7 +26,7 @@ function Home() {
           <h1>Lo que imaginas, <em>hecho preciso.</em></h1>
           <p>Diseñamos y fabricamos muebles a medida para que tu casa, oficina o negocio se sienta verdaderamente propio.</p>
           <div className="button-row">
-            <Link to="/catalog" className="btn btn-primary">Explorar piezas <span aria-hidden="true">↗</span></Link>
+            <a href={WHATSAPP_CATALOG_URL} className="btn btn-primary" target="_blank" rel="noreferrer">Explorar piezas <span aria-hidden="true">↗</span></a>
             <Link to="/contact" className="text-link">Cuéntanos tu proyecto <span aria-hidden="true">→</span></Link>
           </div>
         </div>
@@ -64,14 +66,21 @@ function Home() {
 
       <section className="featured-products">
         <div className="section-heading section-heading-split"><div><span className="eyebrow">Selección / 2024—25</span><h2>Piezas para<br /><em>vivir mejor.</em></h2></div><Link to="/catalog" className="text-link">Ver catálogo completo <span aria-hidden="true">↗</span></Link></div>
-        <div className="mini-product-grid">
-          {featuredSolutions.map((product, index) => (
-            <article className={`mini-product mini-product-${index + 1}`} key={product.id}>
-              <div className="product-ruler" aria-hidden="true"><span>0</span><span>50</span><span>100</span></div>
-              <span className="mini-tag">{product.category} / 0{index + 1}</span><h3>{product.name}</h3><p>{product.description}</p><strong>{product.price}</strong>
-            </article>
-          ))}
-        </div>
+        {catalogStatus === "loading" && <p className="section-status" role="status">Cargando piezas destacadas...</p>}
+        {catalogStatus === "error" && <p className="section-status" role="alert">Las piezas destacadas no están disponibles ahora.</p>}
+        {catalogStatus === "success" && featuredSolutions.length === 0 && (
+          <p className="section-status">Pronto publicaremos nuevas piezas.</p>
+        )}
+        {catalogStatus === "success" && featuredSolutions.length > 0 && (
+          <div className="mini-product-grid">
+            {featuredSolutions.map((product, index) => (
+              <article className={`mini-product mini-product-${index + 1}`} key={product._id || product.id}>
+                <div className="product-ruler" aria-hidden="true"><span>0</span><span>50</span><span>100</span></div>
+                <span className="mini-tag">{product.category} / 0{index + 1}</span><h3>{product.name}</h3><p>{product.description}</p><strong>{typeof product.price === "number" ? `$${product.price.toLocaleString("es-EC")}` : product.price}</strong>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="home-cta"><span className="section-index">02 — Empecemos</span><h2>Tu espacio tiene<br /><em>algo que decir.</em></h2><Link to="/contact" className="btn btn-secondary">Hablar con Levinor <span aria-hidden="true">↗</span></Link></section>

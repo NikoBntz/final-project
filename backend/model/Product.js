@@ -10,6 +10,7 @@ const productSchema = new mongoose.Schema(
     price: {
       type: Number,
       required: true,
+      min: 0,
     },
     description: {
       type: String,
@@ -23,6 +24,7 @@ const productSchema = new mongoose.Schema(
     },
     imageUrl: {
       type: String,
+      trim: true,
       default: "",
     },
   },

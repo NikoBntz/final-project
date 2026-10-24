@@ -1,32 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import ProductCard from "../components/ProductCard";
-import { getProducts } from "../services/api";
+import { WHATSAPP_CATALOG_URL } from "../constants/links";
+import { useProducts } from "../hooks/useProducts";
 
 function Catalog() {
-  const [products, setProducts] = useState([]);
+  const { products, status, error, retry } = useProducts();
   const [activeCategory, setActiveCategory] = useState('Todos');
-  const [status, setStatus] = useState('loading');
-  const [error, setError] = useState('');
 
-  useEffect(() => {
-    let isCurrent = true;
-
-    getProducts()
-      .then((data) => {
-        if (!isCurrent) return;
-        setProducts(data);
-        setStatus('success');
-      })
-      .catch((requestError) => {
-        if (!isCurrent) return;
-        setError(requestError.message);
-        setStatus('error');
-      });
-
-    return () => {
-      isCurrent = false;
-    };
-  }, []);
+  const handleRetry = () => {
+    retry();
+  };
 
   const categories = useMemo(
     () => ['Todos', ...new Set(products.map((product) => product.category))],
@@ -34,9 +17,11 @@ function Catalog() {
   );
 
   const visibleProducts = useMemo(() => {
-    if (activeCategory === 'Todos') return products;
+    if (!categories.includes(activeCategory) || activeCategory === 'Todos') return products;
     return products.filter((product) => product.category === activeCategory);
-  }, [activeCategory, products]);
+  }, [activeCategory, categories, products]);
+
+  const selectedCategory = categories.includes(activeCategory) ? activeCategory : "Todos";
 
   return (
     <div className="page-shell catalog-page">
@@ -51,7 +36,8 @@ function Catalog() {
             <button
               key={category}
               type="button"
-              className={`filter-button ${activeCategory === category ? 'active' : ''}`}
+              aria-pressed={selectedCategory === category}
+              className={`filter-button ${selectedCategory === category ? 'active' : ''}`}
               onClick={() => setActiveCategory(category)}
             >
               {category}
@@ -61,16 +47,19 @@ function Catalog() {
       )}
 
       {status === 'loading' && (
-        <div className="empty-state">
+        <div className="empty-state" role="status">
           <h3>Cargando catálogo...</h3>
           <p>Estamos trayendo los muebles disponibles.</p>
         </div>
       )}
 
       {status === 'error' && (
-        <div className="empty-state">
+        <div className="empty-state" role="alert">
           <h3>No pudimos cargar el catálogo.</h3>
           <p>{error} Verifica que el backend esté encendido e inténtalo de nuevo.</p>
+          <button type="button" className="btn btn-secondary" onClick={handleRetry}>
+            Reintentar
+          </button>
         </div>
       )}
 
@@ -93,6 +82,9 @@ function Catalog() {
               <p>Prueba con otra opción para seguir explorando el catálogo.</p>
             </>
           )}
+          <a className="text-link empty-state-link" href={WHATSAPP_CATALOG_URL} target="_blank" rel="noreferrer">
+            Ver catálogo de WhatsApp <span aria-hidden="true">↗</span>
+          </a>
         </div>
       )}
     </div>

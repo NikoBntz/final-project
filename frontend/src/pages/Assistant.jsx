@@ -13,6 +13,7 @@ function Assistant() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [announcement, setAnnouncement] = useState("");
 
   const history = useMemo(
     () => messages.slice(-8).map((message) => ({ role: message.role, content: message.content })),
@@ -32,6 +33,7 @@ function Assistant() {
     setMessages((current) => [...current, userMessage]);
     setInput("");
     setErrorMessage("");
+    setAnnouncement("");
     setIsLoading(true);
 
     try {
@@ -47,6 +49,7 @@ function Assistant() {
           content: data.reply || "Puedo ayudarte con Levinor. Contacta con el equipo para una cotización.",
         },
       ]);
+      setAnnouncement(data.reply || "Respuesta recibida del asistente.");
     } catch (error) {
       setErrorMessage(error.message || "No se pudo enviar el mensaje.");
     } finally {
@@ -63,7 +66,8 @@ function Assistant() {
       </section>
 
       <div className="assistant-shell">
-        <div className="assistant-thread" aria-live="polite">
+        <p className="sr-only" role="status" aria-live="polite">{announcement}</p>
+        <div className="assistant-thread">
           {messages.map((message, index) => (
             <div
               key={`${message.role}-${index}`}
@@ -73,7 +77,7 @@ function Assistant() {
             </div>
           ))}
 
-          {isLoading && <div className="assistant-bubble assistant typing">Pensando...</div>}
+          {isLoading && <div className="assistant-bubble assistant typing" role="status">Pensando...</div>}
         </div>
 
         <form className="assistant-form" onSubmit={handleSubmit}>

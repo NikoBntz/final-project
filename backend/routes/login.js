@@ -1,10 +1,12 @@
 import bcrypt from "bcrypt";
 import rateLimit from "express-rate-limit";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 import { Router } from "express";
 import Admin from "../model/Admin.js";
 import Product from "../model/Product.js";
 import Message from "../model/Message.js";
+import { validateProductInput } from "../utils/validation.js";
 
 const router = Router();
 const JWT_SECRET =
@@ -17,6 +19,10 @@ const loginLimiter = rateLimit({
   legacyHeaders: false,
   message: { message: "Demasiados intentos. Intenta de nuevo más tarde." },
 });
+
+function isValidProductId(id) {
+  return mongoose.isValidObjectId(id);
+}
 
 function authenticateToken(req, res, next) {
   if (!JWT_SECRET) {
@@ -80,6 +86,10 @@ router.post("/login", loginLimiter, async (req, res) => {
 });
 
 router.get("/me", authenticateToken, async (req, res) => {
+  if (!mongoose.isValidObjectId(req.user.sub)) {
+    return res.status(401).json({ message: "Token inválido." });
+  }
+
   try {
     const admin = await Admin.findById(req.user.sub).select("-passwordHash");
     return res.json({ user: admin });
@@ -124,26 +134,10 @@ router.get("/products", authenticateToken, async (_req, res) => {
 
 router.post("/products", authenticateToken, async (req, res) => {
   try {
-    const { name, price, description, category, imageUrl } = req.body || {};
+    const { data: productData, error } = validateProductInput(req.body);
 
-    if (!name || !description || !category) {
-      return res.status(400).json({ message: "Nombre, descripción y categoría son obligatorios." });
-    }
-
-    const productData = {
-      name: String(name).trim(),
-      description: String(description).trim(),
-      category: String(category).trim(),
-      imageUrl: String(imageUrl || "").trim(),
-      price: Number(price ?? 0),
-    };
-
-    if (!productData.name || !productData.description || !productData.category) {
-      return res.status(400).json({ message: "Los campos principales no pueden estar vacíos." });
-    }
-
-    if (Number.isNaN(productData.price)) {
-      return res.status(400).json({ message: "El precio debe ser un número válido." });
+    if (error) {
+      return res.status(400).json({ message: error });
     }
 
     const product = await Product.create(productData);
@@ -157,25 +151,21 @@ router.post("/products", authenticateToken, async (req, res) => {
 router.put("/products/:id", authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, price, description, category, imageUrl } = req.body || {};
 
-    if (!name || !description || !category) {
-      return res.status(400).json({ message: "Nombre, descripción y categoría son obligatorios." });
+    if (!isValidProductId(id)) {
+      return res.status(400).json({ message: "ID de producto inválido." });
     }
 
-    const productData = {
-      name: String(name).trim(),
-      description: String(description).trim(),
-      category: String(category).trim(),
-      imageUrl: String(imageUrl || "").trim(),
-      price: Number(price ?? 0),
-    };
+    const { data: productData, error } = validateProductInput(req.body);
 
-    if (Number.isNaN(productData.price)) {
-      return res.status(400).json({ message: "El precio debe ser un número válido." });
+    if (error) {
+      return res.status(400).json({ message: error });
     }
 
-    const product = await Product.findByIdAndUpdate(id, productData, { new: true });
+    const product = await Product.findByIdAndUpdate(id, productData, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!product) {
       return res.status(404).json({ message: "Producto no encontrado." });
@@ -191,6 +181,11 @@ router.put("/products/:id", authenticateToken, async (req, res) => {
 router.delete("/products/:id", authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!isValidProductId(id)) {
+      return res.status(400).json({ message: "ID de producto inválido." });
+    }
+
     const product = await Product.findByIdAndDelete(id);
 
     if (!product) {
