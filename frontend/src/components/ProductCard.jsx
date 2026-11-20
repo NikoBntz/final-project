@@ -1,5 +1,3 @@
-import { WHATSAPP_CATALOG_URL } from "../constants/links";
-
 export default function ProductCard({ product }) {
   const category = product.category || "Muebles";
   const price =
@@ -31,7 +29,7 @@ export default function ProductCard({ product }) {
         <h3>{product.name}</h3>
         <p>{product.description}</p>
         <a
-          href={WHATSAPP_CATALOG_URL}
+          href={"https://wa.me/c/593962763508"}
           target="_blank"
           rel="noreferrer"
           className="btn btn-secondary btn-small"

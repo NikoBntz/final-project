@@ -1,28 +1,45 @@
 import { NavLink } from "react-router-dom";
+import logo from "../assets/logo.png";
 
 function Header() {
   return (
     <header className="site-header">
       <div className="header-inner">
         <div className="brand-logo">
-          <NavLink to="/home" className="logo-text">Levinor</NavLink>
-          <span className="logo-tagline">Muebles a medida</span>
+          <NavLink to="/home" className="brand-logo-link">
+            <img src={logo} alt="" className="brand-logo-image" />
+          </NavLink>
         </div>
 
         <nav className="nav-menu" aria-label="Navegación principal">
-          <NavLink to="/home" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+          <NavLink
+            to="/home"
+            className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+          >
             Inicio
           </NavLink>
-          <NavLink to="/about" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+          <NavLink
+            to="/about"
+            className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+          >
             Nosotros
           </NavLink>
-          <NavLink to="/catalog" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+          <NavLink
+            to="/catalog"
+            className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+          >
             Catálogo
           </NavLink>
-          <NavLink to="/contact" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+          <NavLink
+            to="/contact"
+            className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+          >
             Contacto
           </NavLink>
-          <NavLink to="/assistant" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+          <NavLink
+            to="/assistant"
+            className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+          >
             Asistente
           </NavLink>
         </nav>

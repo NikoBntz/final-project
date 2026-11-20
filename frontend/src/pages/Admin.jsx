@@ -146,7 +146,9 @@ function Admin() {
 
       setProductForm(emptyProductForm);
       setEditingProductId("");
-      setProductMessage(editingProductId ? "Producto actualizado." : "Producto creado.");
+      setProductMessage(
+        editingProductId ? "Producto actualizado." : "Producto creado.",
+      );
       await loadDashboard();
     } catch (error) {
       setProductError(error.message);
@@ -170,12 +172,15 @@ function Admin() {
     if (!window.confirm("¿Eliminar este producto?")) return;
 
     try {
-      const response = await fetch(`${API_URL}/api/admin/products/${productId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `${API_URL}/api/admin/products/${productId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       const data = await response.json();
 
@@ -202,13 +207,26 @@ function Admin() {
           <form className="admin-login-card" onSubmit={handleLogin}>
             <label>
               <span>Usuario</span>
-              <input name="username" value={loginForm.username} onChange={handleInputChange} />
+              <input
+                name="username"
+                value={loginForm.username}
+                onChange={handleInputChange}
+              />
             </label>
             <label>
               <span>Contraseña</span>
-              <input type="password" name="password" value={loginForm.password} onChange={handleInputChange} />
+              <input
+                type="password"
+                name="password"
+                value={loginForm.password}
+                onChange={handleInputChange}
+              />
             </label>
-            <button type="submit" className="btn btn-primary" disabled={loading}>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={loading}
+            >
               {loading ? "Entrando..." : "Entrar"}
             </button>
             {loginError && <p className="error-message">{loginError}</p>}
@@ -227,7 +245,13 @@ function Admin() {
 
       <div className="admin-toolbar">
         <span>Sesión activa</span>
-        <button type="button" className="btn btn-secondary" onClick={handleLogout}>Cerrar sesión</button>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={handleLogout}
+        >
+          Cerrar sesión
+        </button>
       </div>
 
       <div className="admin-layout">
@@ -252,36 +276,62 @@ function Admin() {
               </div>
 
               <section className="admin-panel admin-product-form-panel">
-                <h3>{editingProductId ? "Editar producto" : "Agregar producto"}</h3>
+                <h3>
+                  {editingProductId ? "Editar producto" : "Agregar producto"}
+                </h3>
                 <form className="admin-product-form" onSubmit={submitProduct}>
                   <div className="form-row">
                     <label>
                       <span>Nombre</span>
-                      <input name="name" value={productForm.name} onChange={handleProductFieldChange} />
+                      <input
+                        name="name"
+                        value={productForm.name}
+                        onChange={handleProductFieldChange}
+                      />
                     </label>
                   </div>
                   <div className="form-row">
                     <label>
                       <span>Precio</span>
-                      <input name="price" type="number" min="0" step="0.01" value={productForm.price} onChange={handleProductFieldChange} />
+                      <input
+                        name="price"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={productForm.price}
+                        onChange={handleProductFieldChange}
+                      />
                     </label>
                   </div>
                   <div className="form-row">
                     <label>
                       <span>Categoría</span>
-                      <input name="category" value={productForm.category} onChange={handleProductFieldChange} />
+                      <input
+                        name="category"
+                        value={productForm.category}
+                        onChange={handleProductFieldChange}
+                      />
                     </label>
                   </div>
                   <div className="form-row">
                     <label>
                       <span>Imagen</span>
-                      <input name="imageUrl" value={productForm.imageUrl} onChange={handleProductFieldChange} />
+                      <input
+                        name="imageUrl"
+                        value={productForm.imageUrl}
+                        onChange={handleProductFieldChange}
+                      />
                     </label>
                   </div>
                   <div className="form-row">
                     <label>
                       <span>Descripción</span>
-                      <textarea name="description" rows="4" value={productForm.description} onChange={handleProductFieldChange} />
+                      <textarea
+                        name="description"
+                        rows="4"
+                        value={productForm.description}
+                        onChange={handleProductFieldChange}
+                      />
                     </label>
                   </div>
                   <div className="admin-form-actions">
@@ -303,8 +353,12 @@ function Admin() {
                       </button>
                     )}
                   </div>
-                  {productMessage && <p className="success-message">{productMessage}</p>}
-                  {productError && <p className="error-message">{productError}</p>}
+                  {productMessage && (
+                    <p className="success-message">{productMessage}</p>
+                  )}
+                  {productError && (
+                    <p className="error-message">{productError}</p>
+                  )}
                 </form>
               </section>
 
@@ -327,8 +381,20 @@ function Admin() {
                         <td>${Number(product.price).toFixed(2)}</td>
                         <td>
                           <div className="table-actions">
-                            <button type="button" className="mini-action-btn" onClick={() => handleEditProduct(product)}>Editar</button>
-                            <button type="button" className="mini-action-btn danger" onClick={() => handleDeleteProduct(product._id)}>Borrar</button>
+                            <button
+                              type="button"
+                              className="mini-action-btn"
+                              onClick={() => handleEditProduct(product)}
+                            >
+                              Editar
+                            </button>
+                            <button
+                              type="button"
+                              className="mini-action-btn danger"
+                              onClick={() => handleDeleteProduct(product._id)}
+                            >
+                              Borrar
+                            </button>
                           </div>
                         </td>
                       </tr>

@@ -41,8 +41,10 @@ function Contact() {
 
     const nextErrors = {};
     if (form.name.trim().length < 2) nextErrors.name = "Escribe tu nombre.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) nextErrors.email = "Ingresa un correo válido.";
-    if (form.message.trim().length < 12) nextErrors.message = "Cuéntanos un poco más sobre tu proyecto.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+      nextErrors.email = "Ingresa un correo válido.";
+    if (form.message.trim().length < 12)
+      nextErrors.message = "Cuéntanos un poco más sobre tu proyecto.";
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
@@ -64,7 +66,9 @@ function Contact() {
       });
 
       setStatus("success");
-      setServerMessage("Gracias. Tu información ha sido enviada correctamente.");
+      setServerMessage(
+        "Gracias. Tu información ha sido enviada correctamente.",
+      );
       setForm(initialState);
     } catch (error) {
       setStatus("error");
@@ -84,40 +88,97 @@ function Contact() {
           <div className="form-row">
             <label>
               <span id="name-label">Nombre</span>
-              <input id="name" type="text" name="name" value={form.name} onChange={handleChange} required autoComplete="name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "name-error" : undefined} />
-              {errors.name && <small id="name-error" role="alert">{errors.name}</small>}
+              <input
+                id="name"
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                required
+                autoComplete="name"
+                aria-invalid={Boolean(errors.name)}
+                aria-describedby={errors.name ? "name-error" : undefined}
+              />
+              {errors.name && (
+                <small id="name-error" role="alert">
+                  {errors.name}
+                </small>
+              )}
             </label>
           </div>
 
           <div className="form-row">
             <label>
               <span id="email-label">Correo</span>
-              <input id="email" type="email" name="email" value={form.email} onChange={handleChange} required autoComplete="email" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "email-error" : undefined} />
-              {errors.email && <small id="email-error" role="alert">{errors.email}</small>}
+              <input
+                id="email"
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                required
+                autoComplete="email"
+                aria-invalid={Boolean(errors.email)}
+                aria-describedby={errors.email ? "email-error" : undefined}
+              />
+              {errors.email && (
+                <small id="email-error" role="alert">
+                  {errors.email}
+                </small>
+              )}
             </label>
           </div>
 
           <div className="form-row">
             <label>
               <span id="phone-label">Teléfono</span>
-              <input id="phone" type="tel" name="phone" value={form.phone} onChange={handleChange} autoComplete="tel" />
+              <input
+                id="phone"
+                type="tel"
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                autoComplete="tel"
+              />
             </label>
           </div>
 
           <div className="form-row">
             <label>
               <span id="message-label">Proyecto</span>
-              <textarea id="message" name="message" rows="5" value={form.message} onChange={handleChange} required aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? "message-error" : undefined} />
-              {errors.message && <small id="message-error" role="alert">{errors.message}</small>}
+              <textarea
+                id="message"
+                name="message"
+                rows="5"
+                value={form.message}
+                onChange={handleChange}
+                required
+                aria-invalid={Boolean(errors.message)}
+                aria-describedby={errors.message ? "message-error" : undefined}
+              />
+              {errors.message && (
+                <small id="message-error" role="alert">
+                  {errors.message}
+                </small>
+              )}
             </label>
           </div>
 
-          <button type="submit" className="btn btn-primary" disabled={status === "loading"}>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={status === "loading"}
+          >
             {status === "loading" ? "Enviando..." : "Enviar mensaje"}
           </button>
 
           {serverMessage && (
-            <p aria-live="polite" className={status === "success" ? "success-message" : "error-message"}>
+            <p
+              aria-live="polite"
+              className={
+                status === "success" ? "success-message" : "error-message"
+              }
+            >
               {serverMessage}
             </p>
           )}
