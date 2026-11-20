@@ -100,7 +100,7 @@ test("rejects invalid contact input", () => {
 
 test("rejects null validation bodies without throwing", () => {
   assert.deepEqual(validateProductInput(null), {
-    error: "Nombre, descripción y categoría son obligatorios.",
+    error: "Nombre, descripción, precio y categoría son obligatorios.",
   });
   assert.deepEqual(validateContactInput(null), {
     error: "Nombre, correo y mensaje son obligatorios.",
