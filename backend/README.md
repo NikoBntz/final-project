@@ -43,3 +43,30 @@ node --check server.js
 
 `GET /health` is the readiness check. `GET /` confirms the API process is
 running. Do not commit `.env` or any real credentials.
+
+## Render deployment
+
+The repository includes `render.yaml` for a Node Web Service named
+`levinor-backend`.
+
+Render settings:
+
+- Root directory: `backend`
+- Build command: `npm ci`
+- Start command: `npm start`
+- Health check: `/health`
+- Node version: `22`
+
+Set these environment variables in the Render dashboard. Do not commit values:
+
+- `MONGO_URI`
+- `JWT_SECRET`
+- `ADMIN_USERNAME`
+- `ADMIN_PASSWORD`
+- `MISTRAL_API_KEY`
+
+Keep `FRONTEND_URL=https://nikobntz.github.io` to allow browser requests from
+GitHub Pages. Render supplies `PORT`; no fixed port is required.
+
+After the first deployment, run `npm run seed` in the Render shell only when
+the admin account needs to be created or reset. The seed creates no products.
