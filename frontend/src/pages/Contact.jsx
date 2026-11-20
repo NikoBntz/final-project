@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
 import { submitContactMessage } from "../services/api";
 
 const initialState = {
@@ -17,19 +16,13 @@ const contactDetails = [
 ];
 
 function Contact() {
-  const { state } = useLocation();
-  const [form, setForm] = useState(() => ({
-    ...initialState,
-    message: state?.productName ? `Me interesa: ${state.productName}. ` : "",
-  }));
-  const [errors, setErrors] = useState({});
+  const [form, setForm] = useState(initialState);
   const [status, setStatus] = useState("idle");
   const [serverMessage, setServerMessage] = useState("");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setForm((current) => ({ ...current, [name]: value }));
-    setErrors((current) => ({ ...current, [name]: "" }));
     if (status !== "idle") {
       setStatus("idle");
       setServerMessage("");
@@ -38,23 +31,7 @@ function Contact() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    const nextErrors = {};
-    if (form.name.trim().length < 2) nextErrors.name = "Escribe tu nombre.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-      nextErrors.email = "Ingresa un correo válido.";
-    if (form.message.trim().length < 12)
-      nextErrors.message = "Cuéntanos un poco más sobre tu proyecto.";
-
-    if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors);
-      setStatus("error");
-      setServerMessage("Revisa los campos marcados e intenta otra vez.");
-      return;
-    }
-
     try {
-      setErrors({});
       setStatus("loading");
       setServerMessage("");
 
@@ -95,15 +72,9 @@ function Contact() {
                 value={form.name}
                 onChange={handleChange}
                 required
+                minLength={2}
                 autoComplete="name"
-                aria-invalid={Boolean(errors.name)}
-                aria-describedby={errors.name ? "name-error" : undefined}
               />
-              {errors.name && (
-                <small id="name-error" role="alert">
-                  {errors.name}
-                </small>
-              )}
             </label>
           </div>
 
@@ -118,14 +89,7 @@ function Contact() {
                 onChange={handleChange}
                 required
                 autoComplete="email"
-                aria-invalid={Boolean(errors.email)}
-                aria-describedby={errors.email ? "email-error" : undefined}
               />
-              {errors.email && (
-                <small id="email-error" role="alert">
-                  {errors.email}
-                </small>
-              )}
             </label>
           </div>
 
@@ -153,14 +117,8 @@ function Contact() {
                 value={form.message}
                 onChange={handleChange}
                 required
-                aria-invalid={Boolean(errors.message)}
-                aria-describedby={errors.message ? "message-error" : undefined}
+                minLength={12}
               />
-              {errors.message && (
-                <small id="message-error" role="alert">
-                  {errors.message}
-                </small>
-              )}
             </label>
           </div>
 

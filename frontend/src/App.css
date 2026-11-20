@@ -131,31 +131,19 @@ img {
   height: 4.25rem;
   object-fit: contain;
 }
-.logo-text,
 .footer-brand {
   font-family: var(--font-headline);
   color: var(--ink);
   letter-spacing: -0.04em;
 }
-.logo-text {
-  font-size: 2rem;
-  font-weight: 600;
-}
-.logo-tagline,
 .nav-link,
 .eyebrow,
 .section-index,
-.mini-tag,
 .product-category,
-.status-badge,
 .footer-col h5 {
   font-family: var(--font-label);
   text-transform: uppercase;
   letter-spacing: 0.12em;
-}
-.logo-tagline {
-  font-size: 0.6rem;
-  color: var(--blueprint);
 }
 .nav-menu {
   display: flex;
@@ -176,9 +164,6 @@ img {
 .nav-link.active {
   color: var(--ink);
   border-color: var(--sawdust);
-}
-.admin-nav-btn {
-  border: 1px solid var(--line);
 }
 .page-shell {
   width: min(1100px, 100%);
@@ -334,7 +319,6 @@ em {
   font-size: 2rem;
 }
 .feature-showcase,
-.featured-products,
 .about-page,
 .contact-page,
 .catalog-page,
@@ -352,7 +336,6 @@ em {
   font-size: clamp(2.7rem, 5.3vw, 5rem);
 }
 .feature-grid,
-.mini-product-grid,
 .overview-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -361,12 +344,10 @@ em {
   border: 1px solid var(--line);
 }
 .feature-card,
-.mini-product,
 .overview-card,
 .info-panel,
 .contact-sidebar,
 .admin-panel,
-.admin-sidebar,
 .empty-state,
 .contact-form,
 .product-card {
@@ -396,7 +377,6 @@ em {
   line-height: 1;
 }
 .feature-card h3,
-.mini-product h3,
 .contact-sidebar h3,
 .admin-panel h3 {
   margin: 0 0 0.7rem;
@@ -407,7 +387,6 @@ em {
   letter-spacing: -0.035em;
 }
 .feature-card p,
-.mini-product p,
 .info-panel p,
 .value-list li,
 .contact-list li,
@@ -415,8 +394,7 @@ em {
   color: var(--muted);
   line-height: 1.6;
 }
-.feature-card p,
-.mini-product p {
+.feature-card p {
   max-width: 280px;
   margin: 0;
   font-size: 0.9rem;
@@ -460,58 +438,6 @@ em {
 .stat-item > span:last-child {
   font-size: 0.76rem;
   opacity: 0.75;
-}
-.section-heading-split {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 2rem;
-}
-.mini-product {
-  position: relative;
-  min-height: 320px;
-  padding: 1.5rem;
-  overflow: hidden;
-}
-.mini-product-1 {
-  background: var(--paper-deep);
-}
-.mini-product-2 {
-  background: var(--blueprint);
-  color: var(--paper);
-}
-.mini-product-3 {
-  background: var(--sawdust);
-}
-.mini-product-2 h3,
-.mini-product-2 p,
-.mini-product-2 strong,
-.mini-product-2 .mini-tag {
-  color: var(--paper);
-}
-.product-ruler {
-  display: flex;
-  justify-content: space-between;
-  border-top: 1px solid currentColor;
-  margin-bottom: 3rem;
-  padding-top: 0.35rem;
-  font-size: 0.58rem;
-  opacity: 0.55;
-}
-.mini-tag {
-  display: block;
-  margin-bottom: 1rem;
-  font-size: 0.62rem;
-  color: var(--blueprint);
-}
-.mini-product strong {
-  display: inline-block;
-  margin-top: 1.4rem;
-  color: var(--blueprint);
-  font-size: 0.9rem;
-}
-.mini-product-2 strong {
-  color: var(--paper);
 }
 .home-cta {
   display: grid;
@@ -957,13 +883,6 @@ em {
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.status-badge {
-  display: inline-flex;
-  padding: 0.35rem 0.7rem;
-  background: var(--blueprint-light);
-  color: var(--blueprint);
-  font-size: 0.66rem;
-}
 .empty-state {
   padding: 2rem 1.5rem;
   text-align: center;
@@ -975,13 +894,6 @@ em {
 .empty-state-link {
   justify-content: center;
   margin-top: 1.25rem;
-}
-.section-status {
-  margin: 0;
-  padding: 2rem 1.5rem;
-  border: 1px solid var(--line);
-  color: var(--muted);
-  text-align: center;
 }
 .site-footer {
   margin-top: auto;
@@ -1051,12 +963,6 @@ em {
     display: inline-flex;
     align-items: center;
   }
-  .-slab-section {
-    min-height: 0;
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-    padding-top: 3rem;
-  }
   .hero-section h1 {
     font-size: clamp(3.1rem, 15vw, 5rem);
   }
@@ -1086,7 +992,6 @@ em {
     display: none;
   }
   .feature-showcase,
-  .featured-products,
   .about-page,
   .contact-page,
   .catalog-page,
@@ -1094,23 +999,12 @@ em {
     padding-top: 4rem;
   }
   .feature-grid,
-  .mini-product-grid,
   .stats-band,
   .product-grid {
     grid-template-columns: 1fr;
   }
   .feature-card {
     min-height: 230px;
-  }
-  .section-heading-split {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-  .section-heading-split .text-link {
-    margin-top: -1rem;
-  }
-  .mini-product {
-    min-height: 280px;
   }
   .about-layout,
   .contact-layout,
