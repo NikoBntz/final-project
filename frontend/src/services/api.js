@@ -1,6 +1,6 @@
 export const API_URL = import.meta.env.DEV
   ? ""
-  : import.meta.env.VITE_API_URL || "http://localhost:3030";
+  : import.meta.env.VITE_API_URL || "https://levinor-backend.onrender.com";
 
 // PRODUCTS
 export async function getProducts(options = {}) {
