@@ -29,7 +29,9 @@ router.post("/", contactLimiter, async (req, res) => {
     });
   } catch (error) {
     console.error("Error saving contact message:", error);
-    return res.status(500).json({ message: "No se pudo enviar el mensaje. Intenta de nuevo." });
+    return res
+      .status(500)
+      .json({ message: "No se pudo enviar el mensaje. Intenta de nuevo." });
   }
 });
 

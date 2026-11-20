@@ -4,9 +4,9 @@ export function validateProductInput(body = {}) {
   const { name, price, description, category, imageUrl } =
     body && typeof body === "object" ? body : {};
 
-  if (!name || !description || !category) {
+  if (!name || !description || !category || !price) {
     return {
-      error: "Nombre, descripción y categoría son obligatorios.",
+      error: "Nombre, descripción, precio y categoría son obligatorios.",
     };
   }
 
@@ -34,8 +34,12 @@ export function validateProductInput(body = {}) {
 }
 
 export function validateContactInput(body = {}) {
-  const { name, email, phone = "", message } =
-    body && typeof body === "object" ? body : {};
+  const {
+    name,
+    email,
+    phone = "",
+    message,
+  } = body && typeof body === "object" ? body : {};
 
   if (!name || !email || !message) {
     return {

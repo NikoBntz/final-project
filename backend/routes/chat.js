@@ -86,10 +86,7 @@ Contacto base: WhatsApp o Instagram del taller, según la información del sitio
     }
 
     const controller = new AbortController();
-    providerTimeout = setTimeout(
-      () => controller.abort(),
-      MISTRAL_TIMEOUT_MS,
-    );
+    providerTimeout = setTimeout(() => controller.abort(), MISTRAL_TIMEOUT_MS);
 
     const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
       method: "POST",

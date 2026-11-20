@@ -2,8 +2,8 @@ import "dotenv/config";
 import mongoose from "mongoose";
 import { createApp } from "./app.js";
 
-const PORT = Number(process.env.PORT || 3030);
-const HOST = process.env.HOST || "0.0.0.0";
+const PORT = Number(process.env.PORT);
+const HOST = process.env.HOST;
 const DB_RETRY_DELAY_MS = 10000;
 const DB_SELECTION_TIMEOUT_MS = 10000;
 let isShuttingDown = false;

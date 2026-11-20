@@ -26,7 +26,9 @@ function isValidProductId(id) {
 
 function authenticateToken(req, res, next) {
   if (!JWT_SECRET) {
-    return res.status(503).json({ message: "La autenticación no está configurada." });
+    return res
+      .status(503)
+      .json({ message: "La autenticación no está configurada." });
   }
 
   const authHeader = req.headers.authorization || "";
@@ -49,15 +51,21 @@ router.post("/login", loginLimiter, async (req, res) => {
   const { username, password } = req.body || {};
 
   if (!username || !password) {
-    return res.status(400).json({ message: "Usuario y contraseña son obligatorios." });
+    return res
+      .status(400)
+      .json({ message: "Usuario y contraseña son obligatorios." });
   }
 
   if (!JWT_SECRET) {
-    return res.status(503).json({ message: "La autenticación no está configurada." });
+    return res
+      .status(503)
+      .json({ message: "La autenticación no está configurada." });
   }
 
   try {
-    const admin = await Admin.findOne({ username: String(username).trim().toLowerCase() });
+    const admin = await Admin.findOne({
+      username: String(username).trim().toLowerCase(),
+    });
 
     if (!admin) {
       return res.status(401).json({ message: "Credenciales inválidas." });
@@ -128,7 +136,9 @@ router.get("/products", authenticateToken, async (_req, res) => {
     return res.json(products);
   } catch (error) {
     console.error("Admin products error:", error);
-    return res.status(500).json({ message: "No se pudieron cargar los productos." });
+    return res
+      .status(500)
+      .json({ message: "No se pudieron cargar los productos." });
   }
 });
 
@@ -174,7 +184,9 @@ router.put("/products/:id", authenticateToken, async (req, res) => {
     return res.json(product);
   } catch (error) {
     console.error("Admin update product error:", error);
-    return res.status(500).json({ message: "No se pudo actualizar el producto." });
+    return res
+      .status(500)
+      .json({ message: "No se pudo actualizar el producto." });
   }
 });
 
@@ -195,7 +207,9 @@ router.delete("/products/:id", authenticateToken, async (req, res) => {
     return res.json({ success: true, message: "Producto eliminado." });
   } catch (error) {
     console.error("Admin delete product error:", error);
-    return res.status(500).json({ message: "No se pudo eliminar el producto." });
+    return res
+      .status(500)
+      .json({ message: "No se pudo eliminar el producto." });
   }
 });
 
@@ -205,7 +219,9 @@ router.get("/messages", authenticateToken, async (_req, res) => {
     return res.json(messages);
   } catch (error) {
     console.error("Admin messages error:", error);
-    return res.status(500).json({ message: "No se pudieron cargar los mensajes." });
+    return res
+      .status(500)
+      .json({ message: "No se pudieron cargar los mensajes." });
   }
 });
 
