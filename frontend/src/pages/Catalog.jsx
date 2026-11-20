@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import ProductCard from "../components/ProductCard";
+import { WHATSAPP_CATALOG_URL } from "../constants/links";
 import { useProducts } from "../hooks/useProducts";
 
 function Catalog() {
@@ -95,7 +96,7 @@ function Catalog() {
             )}
             <a
               className="text-link empty-state-link"
-              href={"https://wa.me/c/593962763508"}
+              href={WHATSAPP_CATALOG_URL}
               target="_blank"
               rel="noreferrer"
             >

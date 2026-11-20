@@ -7,7 +7,11 @@ function Header() {
       <div className="header-inner">
         <div className="brand-logo">
           <NavLink to="/home" className="brand-logo-link">
-            <img src={logo} alt="" className="brand-logo-image" />
+            <img
+              src={logo}
+              alt="Levinor, ir al inicio"
+              className="brand-logo-image"
+            />
           </NavLink>
         </div>
 

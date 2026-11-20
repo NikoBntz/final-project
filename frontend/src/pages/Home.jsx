@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { WHATSAPP_CATALOG_URL } from "../constants/links";
 import { useProducts } from "../hooks/useProducts";
 
 const capabilities = [
@@ -43,7 +44,7 @@ function Home() {
           </p>
           <div className="button-row">
             <a
-              href={"https://wa.me/c/593962763508"}
+              href={WHATSAPP_CATALOG_URL}
               className="btn btn-primary"
               target="_blank"
               rel="noreferrer"

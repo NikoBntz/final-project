@@ -1,8 +1,8 @@
 export const API_URL = import.meta.env.DEV
   ? ""
-  : import.meta.env.VITE_API_URL || "{http://localhost:3030}";
+  : import.meta.env.VITE_API_URL || "http://localhost:3030";
 
-//! PRODUCTS
+// PRODUCTS
 export async function getProducts(options = {}) {
   const response = await fetch(`${API_URL}/api/products`, options);
 
@@ -13,7 +13,7 @@ export async function getProducts(options = {}) {
   return response.json();
 }
 
-//! CONTACT
+// CONTACT
 export async function submitContactMessage(payload) {
   const response = await fetch(`${API_URL}/api/contact`, {
     method: "POST",
@@ -32,7 +32,7 @@ export async function submitContactMessage(payload) {
   return data;
 }
 
-//! CHATBOT
+// CHATBOT
 export async function sendChatMessage(payload) {
   const response = await fetch(`${API_URL}/api/chat`, {
     method: "POST",
