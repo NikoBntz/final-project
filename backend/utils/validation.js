@@ -4,7 +4,10 @@ export function validateProductInput(body = {}) {
   const { name, price, description, category, imageUrl } =
     body && typeof body === "object" ? body : {};
 
-  if (!name || !description || !category || !price) {
+  const priceMissing =
+    price === undefined || price === null || price === "";
+
+  if (!name || !description || !category || priceMissing) {
     return {
       error: "Nombre, descripción, precio y categoría son obligatorios.",
     };

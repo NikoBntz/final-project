@@ -87,6 +87,26 @@ test("normalizes valid product input", () => {
   });
 });
 
+test("accepts a zero product price", () => {
+  assert.deepEqual(
+    validateProductInput({
+      name: "Test",
+      description: "Descripción",
+      category: "Oficina",
+      price: 0,
+    }),
+    {
+      data: {
+        name: "Test",
+        description: "Descripción",
+        category: "Oficina",
+        imageUrl: "",
+        price: 0,
+      },
+    },
+  );
+});
+
 test("rejects invalid contact input", () => {
   assert.deepEqual(
     validateContactInput({

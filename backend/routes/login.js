@@ -9,9 +9,7 @@ import Message from "../model/Message.js";
 import { validateProductInput } from "../utils/validation.js";
 
 const router = Router();
-const JWT_SECRET =
-  process.env.JWT_SECRET ||
-  (process.env.NODE_ENV === "production" ? null : "levinor-dev-secret");
+const JWT_SECRET = process.env.JWT_SECRET || null;
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 10,
