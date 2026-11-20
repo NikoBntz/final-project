@@ -1,42 +1,39 @@
 import { Link } from "react-router-dom";
 import { WHATSAPP_CATALOG_URL } from "../constants/links";
-import { useProducts } from "../hooks/useProducts";
+import heroImg from "../assets/hero-img.jpg";
 
 const capabilities = [
   {
     number: "01",
     title: "Cocinas a medida",
-    text: "Flujos de trabajo pensados alrededor de tus hábitos, con materiales honestos y almacenamiento que sí funciona.",
+    text: "Diseñamos las mismas en base a tus gustos, priorizando la optimización del espacio, y la funcionalidad.",
   },
   {
     number: "02",
-    title: "Closets y orden",
-    text: "Sistemas empotrados que aprovechan cada centímetro sin perder ligereza, calma ni carácter.",
+    title: "Closets",
+    text: "Sistemas empotrados que aprovechan tus espacios.",
   },
   {
     number: "03",
     title: "Piezas singulares",
-    text: "Escritorios, anaqueles y muebles especiales hechos para resolver un espacio concreto.",
+    text: "Escritorios, anaqueles y muebles especiales hechos para resolver un problema, dentro de un espacio concreto.",
   },
 ];
 
 const metrics = [
   { value: "A medida", label: "Cada proyecto empieza en tu espacio" },
   { value: "Local", label: "Diseñado y fabricado en Guayaquil" },
-  { value: "Directo", label: "Hablas con el equipo que lo construye" },
+  { value: "Directo", label: "Fácil y rápida comunicación" },
 ];
 
 function Home() {
-  const { products, status: catalogStatus } = useProducts();
-  const featuredSolutions = products.slice(0, 3);
-
   return (
     <div className="page-shell home-page">
       <section className="hero-section">
         <div className="hero-copy">
           <span className="eyebrow">Levinor / Taller de mobiliario</span>
           <h1>
-            Lo que imaginas, <em>hecho preciso.</em>
+            Fabricamos a la medida <em>de tus sueños.</em>
           </h1>
           <p>
             Diseñamos y fabricamos muebles a medida para que tu casa, oficina o
@@ -56,19 +53,12 @@ function Home() {
             </Link>
           </div>
         </div>
-        <div
-          className="hero-visual"
-          aria-label="Composición geométrica de madera y planos de taller"
-          role="img"
-        >
-          <div className="hero-grid-lines" aria-hidden="true" />
-          <div className="hero-slab hero-slab-back" aria-hidden="true" />
-          <div className="hero-slab hero-slab-front" aria-hidden="true">
-            <span>LEV / 24</span>
-          </div>
-          <div className="hero-circle" aria-hidden="true" />
-          <span className="hero-coordinate">-02° 10′ / -79° 54′</span>
-          <span className="hero-caption">Materia / función / detalle</span>
+        <div className="hero-visual">
+          <img
+            src={heroImg}
+            alt="Cocina azul forrada en formica, diseñada y fabricada por Levinor"
+            className="hero-image"
+          />
         </div>
       </section>
 
@@ -114,61 +104,6 @@ function Home() {
             <span>{metric.label}</span>
           </div>
         ))}
-      </section>
-
-      <section className="featured-products">
-        <div className="section-heading section-heading-split">
-          <div>
-            <span className="eyebrow">Selección / 2024—25</span>
-            <h2>
-              Piezas para
-              <br />
-              <em>vivir mejor.</em>
-            </h2>
-          </div>
-          <Link to="/catalog" className="text-link">
-            Ver catálogo completo <span aria-hidden="true">↗</span>
-          </Link>
-        </div>
-        {catalogStatus === "loading" && (
-          <p className="section-status" role="status">
-            Cargando piezas destacadas...
-          </p>
-        )}
-        {catalogStatus === "error" && (
-          <p className="section-status" role="alert">
-            Las piezas destacadas no están disponibles ahora.
-          </p>
-        )}
-        {catalogStatus === "success" && featuredSolutions.length === 0 && (
-          <p className="section-status">Pronto publicaremos nuevas piezas.</p>
-        )}
-        {catalogStatus === "success" && featuredSolutions.length > 0 && (
-          <div className="mini-product-grid">
-            {featuredSolutions.map((product, index) => (
-              <article
-                className={`mini-product mini-product-${index + 1}`}
-                key={product._id || product.id}
-              >
-                <div className="product-ruler" aria-hidden="true">
-                  <span>0</span>
-                  <span>50</span>
-                  <span>100</span>
-                </div>
-                <span className="mini-tag">
-                  {product.category} / 0{index + 1}
-                </span>
-                <h3>{product.name}</h3>
-                <p>{product.description}</p>
-                <strong>
-                  {typeof product.price === "number"
-                    ? `$${product.price.toLocaleString("es-EC")}`
-                    : product.price}
-                </strong>
-              </article>
-            ))}
-          </div>
-        )}
       </section>
 
       <section className="home-cta">

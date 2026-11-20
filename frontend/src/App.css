@@ -296,65 +296,12 @@ em {
   background: var(--blueprint);
   isolation: isolate;
 }
-.hero-grid-lines {
-  position: absolute;
-  inset: 0;
-  opacity: 0.2;
-  background-image:
-    linear-gradient(rgba(241, 237, 228, 0.5) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(241, 237, 228, 0.5) 1px, transparent 1px);
-  background-size: 42px 42px;
-}
-.hero-slab {
-  position: absolute;
-  width: 66%;
-  height: 56%;
-  transform: rotate(-13deg);
-}
-.hero-slab-back {
-  top: 8%;
-  left: 18%;
-  background: var(--sawdust);
-  opacity: 0.8;
-}
-.hero-slab-front {
-  top: 26%;
-  left: 8%;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  padding: 1.4rem;
-  background: var(--paper-deep);
-  box-shadow: 18px 20px 0 rgba(23, 32, 29, 0.2);
-  color: var(--ink);
-  font-size: 0.65rem;
-  letter-spacing: 0.12em;
-}
-.hero-circle {
-  position: absolute;
-  right: -12%;
-  bottom: -17%;
-  width: 63%;
-  aspect-ratio: 1;
-  border: 1px solid var(--paper);
-  border-radius: 50%;
-  opacity: 0.75;
-}
-.hero-coordinate,
-.hero-caption {
-  position: absolute;
-  color: var(--paper);
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.hero-coordinate {
-  top: 1.2rem;
-  right: 1.2rem;
-}
-.hero-caption {
-  bottom: 1.2rem;
-  left: 1.2rem;
+.hero-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 480px;
+  object-fit: cover;
 }
 
 .workshop-note {
@@ -1104,7 +1051,7 @@ em {
     display: inline-flex;
     align-items: center;
   }
-  .hero-section {
+  .-slab-section {
     min-height: 0;
     grid-template-columns: 1fr;
     gap: 2.5rem;
@@ -1114,6 +1061,9 @@ em {
     font-size: clamp(3.1rem, 15vw, 5rem);
   }
   .hero-visual {
+    min-height: 320px;
+  }
+  .hero-image {
     min-height: 320px;
   }
   .button-row {
