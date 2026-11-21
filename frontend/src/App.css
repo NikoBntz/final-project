@@ -553,7 +553,7 @@ em {
   overflow: hidden;
 }
 .product-visual {
-  height: 7.25rem;
+  height: 400px;
   display: grid;
   place-items: center;
   color: var(--paper);
